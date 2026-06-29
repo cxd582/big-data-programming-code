@@ -1,0 +1,34 @@
+
+
+# 任务一：评分次数统计
+hadoop jar /opt/hadoop/share/hadoop/tools/lib/hadoop-streaming-3.3.4.jar \
+    -input /data/movielens/u.data \
+    -output /output/rating_count \
+    -mapper "python3 rating_count_mapper.py" \
+    -reducer "python3 rating_count_reducer.py" \
+    -file rating_count_mapper.py \
+    -file rating_count_reducer.py
+
+# 任务二：高分评价统计
+hadoop jar /opt/hadoop/share/hadoop/tools/lib/hadoop-streaming-3.3.4.jar \
+    -input /data/movielens/u.data \
+    -output /output/high_rating \
+    -mapper "python3 high_rating_mapper.py" \
+    -reducer "python3 rating_count_reducer.py" \
+    -file high_rating_mapper.py \
+    -file rating_count_reducer.py
+
+# 任务三：各类型电影平均评分
+hadoop jar /opt/hadoop/share/hadoop/tools/lib/hadoop-streaming-3.3.4.jar \
+    -input /data/movielens/u.data \
+    -output /output/genre_avg \
+    -mapper "python3 genre_avg_mapper.py" \
+    -reducer "python3 genre_avg_reducer.py" \
+    -file genre_avg_mapper.py \
+    -file genre_avg_reducer.py \
+    -file u.item
+
+# 查看结果
+hadoop fs -cat /output/rating_count/part-00000 | head -20
+hadoop fs -cat /output/high_rating/part-00000 | head -20
+hadoop fs -cat /output/genre_avg/part-00000
